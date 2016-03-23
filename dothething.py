@@ -9,8 +9,6 @@ today = datetime.date.today()
 d = (datetime.date(today.year,today.month,1) - dateutil.relativedelta.relativedelta(days=1))
 lastMonth = d.strftime("%B")
 
-#cols=['YUABCGEN',2,'3BC2', d.strftime("%d-%b-%Y")]
-
 cols=[]
 with open('cols.cfg') as f:
   cols=f.read().splitlines()
@@ -38,15 +36,15 @@ def main(argv):
 
 
 def letsDoIt(i,o):
-  total=0;
+  total=0.00;
+  newrow=[]
   with open(i, 'rb') as ifile:
     ifile.next()
     reader = csv.reader(ifile, delimiter=',')
     for row in reader:
-      money = row[5][1:]
+      money = "{0:.2f}".format(float(row[5][1:]))
       index=row[2].split(' ')
       if 1 == len(index): index.append('')
-      
       total+=float(money)
       newrow=[cols[0],
               '',
@@ -64,9 +62,20 @@ def letsDoIt(i,o):
               '',
               cols[7],
               '',
-              index[1]
+              index[1],
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
           ]
-      print newrow
+  ifile.close()
+  firstrow=[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'','','','','','','','','','','','','','','','','','']
+  print len(firstrow)
+  print len(newrow)
       
 
 
