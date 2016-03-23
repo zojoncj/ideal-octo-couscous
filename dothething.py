@@ -37,13 +37,12 @@ def main(argv):
 
 def letsDoIt(i,o):
   total=0.00;
-  newrow=[]
+  rows=[]
   with open(i, 'rb') as ifile:
     ifile.next()
     reader = csv.reader(ifile, delimiter=',')
     for row in reader:
       purpose = row[6]+' '+cols[3]
-      print purpose
       money = "{0:.2f}".format(float(row[5][1:]))
       index=row[2].split(' ')
       if 1 == len(index): index.append('')
@@ -74,13 +73,13 @@ def letsDoIt(i,o):
               '',
               '',
           ]
+      rows.append(newrow)
   ifile.close()
-  firstrow=[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'','','','','','','','','','','','','','','','','','']
-  print newrow
-      
 
-
-
+  rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'','','','','','','','','','','','','','','','','',''])
+  rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[8]])
+  rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[9]])
+  rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[10]])
 
 if __name__ == "__main__":
     main(sys.argv[1:])
