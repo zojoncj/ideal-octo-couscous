@@ -13,26 +13,13 @@ cols=[]
 with open('cols.cfg') as f:
   cols=f.read().splitlines()
 
-def main(argv):
-    defaultIn = "nws.backups.%s.csv" % lastMonth
-    defaultOut = "nws.backups.FUPLOAD.%s.csv" % lastMonth
-    inputfile = defaultIn
-    outputfile = defaultOut
-    try:
-      opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
-    except getopt.GetoptError:
-      print 'dothething.py -i <inputfile> -o <outputfile>'
-      sys.exit(2)
-    for opt, arg in opts:
-      if opt == '-h':
-         print 'dothething.py -i <inputfile> -o <outputfile>'
-         sys.exit()
-      elif opt in ("-i", "--ifile"):
-         inputfile = arg
-      elif opt in ("-o", "--ofile"):
-         outputfile = arg
-
-    letsDoIt(inputfile,outputfile)
+def letsWriteIt(rows,o):
+    print o
+    with open(o, 'wb') as csvfile:
+      outwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+      for row in rows:
+        outwriter.writerow(row)
+    csvfile.close()
 
 
 def letsDoIt(i,o):
@@ -80,6 +67,31 @@ def letsDoIt(i,o):
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[8]])
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[9]])
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[10]])
+  letsWriteIt(rows,o)
+
+def main(argv):
+    defaultIn = "nws.backups.%s.csv" % lastMonth
+    defaultOut = "nws.backups.FUPLOAD.%s.csv" % lastMonth
+    inputfile = defaultIn
+    outputfile = defaultOut
+    try:
+      opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+    except getopt.GetoptError:
+      print 'dothething.py -i <inputfile> -o <outputfile>'
+      sys.exit(2)
+    for opt, arg in opts:
+      if opt == '-h':
+         print 'dothething.py -i <inputfile> -o <outputfile>'
+         sys.exit()
+      elif opt in ("-i", "--ifile"):
+         inputfile = arg
+      elif opt in ("-o", "--ofile"):
+         outputfile = arg
+
+    letsDoIt(inputfile,outputfile)
+
+
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
