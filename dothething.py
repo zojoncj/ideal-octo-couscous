@@ -42,6 +42,8 @@ def letsDoIt(i,o):
     ifile.next()
     reader = csv.reader(ifile, delimiter=',')
     for row in reader:
+      purpose = row[6]+' '+cols[3]
+      print purpose
       money = "{0:.2f}".format(float(row[5][1:]))
       index=row[2].split(' ')
       if 1 == len(index): index.append('')
@@ -53,7 +55,7 @@ def letsDoIt(i,o):
               '',
               d.strftime("%d-%b-%Y"),
               money,
-              cols[3],
+              purpose,
               cols[4],
               cols[5],
               cols[6],
@@ -74,8 +76,7 @@ def letsDoIt(i,o):
           ]
   ifile.close()
   firstrow=[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'','','','','','','','','','','','','','','','','','']
-  print len(firstrow)
-  print len(newrow)
+  print newrow
       
 
 
