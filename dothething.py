@@ -63,7 +63,8 @@ def letsDoIt(i,o):
       rows.append(newrow)
   ifile.close()
 
-  rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'','','','','','','','','','','','','','','','','',''])
+  rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format((total+total)),'','','','','','','','','','','','','','','','','',''])
+  rows.append([cols[0],'',cols[1],cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'IT Infrastructure Server Backups',cols[6],cols[5],cols[6],cols[11],'','',cols[12],'','','','','','','','','',''])
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[8]])
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[9]])
   rows.append(['','','','','','','','','','','','','','','','','','','','','','','','',cols[10]])
