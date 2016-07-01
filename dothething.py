@@ -1,36 +1,39 @@
 #!/usr/bin/env python
 
+
 import csv
 import datetime
 import dateutil.relativedelta
 import sys, getopt
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 today = datetime.date.today()
 d = (datetime.date(today.year,today.month,1) - dateutil.relativedelta.relativedelta(days=1))
 lastMonth = d.strftime("%B")
 
 cols=[]
-with open('cols.cfg') as f:
-  cols=f.read().splitlines()
+f = open('cols.cfg')
+cols=f.read().splitlines()
 
 def letsWriteIt(rows,o):
-    print o
-    with open(o, 'wb') as csvfile:
-      outwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-      for row in rows:
-        outwriter.writerow(row)
+    csvfile = open(o, 'wb')
+    outwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for row in rows:
+    	outwriter.writerow(row)
     csvfile.close()
 
 
 def letsDoIt(i,o):
-  total=0.00;
-  rows=[]
-  with open(i, 'rb') as ifile:
+    total=0.00
+    rows=[]
+    ifile = open(i, 'rb')
     ifile.next()
     reader = csv.reader(ifile, delimiter=',')
     for row in reader:
       purpose = row[6]+' '+cols[3]
-      money = "{0:.2f}".format(float(row[5][1:]))
+      money = "%.2f" % float(row[5][1:])
       index=row[2].split(' ')
       if 1 == len(index): index.append('')
       total+=float(money)
@@ -61,18 +64,40 @@ def letsDoIt(i,o):
               '',
           ]
       rows.append(newrow)
-  ifile.close()
+    ifile.close()
+    t1 = "%.2f" % float(total)
+    t2 = "%.2f" % float(total+total)
 
-  rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format((total+total)),'','','','','','','','','','','','','','','','','',''])
-  rows.append([cols[0],'',cols[1],cols[2],'',d.strftime("%d-%b-%Y"), "{0:.2f}".format(total),'IT Infrastructure Server Backups',cols[6],cols[5],cols[6],cols[11],'','',cols[12],'','','','','','','','','',''])
-  rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[8]])
-  rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[9]])
-  rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[10]])
-  letsWriteIt(rows,o)
+
+
+    rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"),t2,'','','','','','','','','','','','','','','','','',''])
+    rows.append([cols[0],'',cols[1],cols[2],'',d.strftime("%d-%b-%Y"),t1,'IT Infrastructure Server Backups',cols[6],cols[5],cols[6],cols[11],'','',cols[12],'','','','','','','','','',''])
+    rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[8]])
+    rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[9]])
+    rows.append([cols[0],'','4','','','','','','','','','','','','','','','','','','','','','',cols[10]])
+    letsWriteIt(rows,o)
+
+
+def send_message(ofile):
+  msg = MIMEMultipart('alternative')
+  s = smtplib.SMTP(cols[13],25)
+  msg['Subject'] = "%s Backups FUPLOAD" %lastMonth
+  msg['From'] = 'nobody@nsr1.nws.oregonstate.edu'
+  msg['To'] = cols[14]
+  body = 'Attached is the FUPLOAD file for Backups for %s' %lastMonth
+  content = MIMEText(body, 'plain')
+  msg.attach(content)
+  f=file(ofile)
+  attachment=MIMEText(f.read())
+  attachname='%s-NWSBCKUPS-FUPLOAD.csv' %lastMonth
+  attachment.add_header('Content-Disposition', 'attachment', filename=attachname)
+  msg.attach(attachment)
+  recip = cols[14].split(',')
+  s.sendmail('nobody@nsr1.nws.oregonstate.edu',recip,msg.as_string())
 
 def main(argv):
-    defaultIn = "nws.backups.%s.csv" % lastMonth
-    defaultOut = "nws.backups.FUPLOAD.%s.csv" % lastMonth
+    defaultIn = "/tmp/nws.backups.%s.csv" % lastMonth
+    defaultOut = "/tmp/nws.backups.FUPLOAD.%s.csv" % lastMonth
     inputfile = defaultIn
     outputfile = defaultOut
     try:
@@ -90,6 +115,7 @@ def main(argv):
          outputfile = arg
 
     letsDoIt(inputfile,outputfile)
+    send_message(outputfile)
 
 
 
