@@ -4,7 +4,7 @@
 import csv
 import datetime
 import dateutil.relativedelta
-import sys, getopt
+import sys, getopt,os
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -14,7 +14,8 @@ d = (datetime.date(today.year,today.month,1) - dateutil.relativedelta.relativede
 lastMonth = d.strftime("%B")
 
 cols=[]
-f = open('cols.cfg')
+wd=os.path.dirname(os.path.realpath(__file__))
+f = open(wd+'/cols.cfg')
 cols=f.read().splitlines()
 
 def letsWriteIt(rows,o):
