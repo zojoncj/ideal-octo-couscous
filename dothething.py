@@ -22,7 +22,8 @@ def letsWriteIt(rows,o):
     csvfile = open(o, 'wb')
     outwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for row in rows:
-    	outwriter.writerow(row)
+      print row
+      outwriter.writerow(row)
     csvfile.close()
 
 
@@ -35,6 +36,8 @@ def letsDoIt(i,o):
     for row in reader:
       purpose = row[6]+' '+cols[3]
       money = "%.2f" % float(row[5][1:])
+      if(float(money) <= 0):
+        continue
       index=row[2].split(' ')
       if 1 == len(index): index.append('')
       total+=float(money)
@@ -116,7 +119,7 @@ def main(argv):
          outputfile = arg
 
     letsDoIt(inputfile,outputfile)
-    send_message(outputfile)
+    #send_message(outputfile)
 
 
 
