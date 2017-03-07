@@ -119,7 +119,7 @@ def main(argv):
          outputfile = arg
 
     letsDoIt(inputfile,outputfile)
-    #send_message(outputfile)
+    send_message(outputfile)
 
 
 
