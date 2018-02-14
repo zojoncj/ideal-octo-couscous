@@ -12,6 +12,7 @@ from email.MIMEText import MIMEText
 today = datetime.date.today()
 d = (datetime.date(today.year,today.month,1) - dateutil.relativedelta.relativedelta(days=1))
 lastMonth = d.strftime("%B")
+#lastMonth = today.strftime("%B")
 
 cols=[]
 wd=os.path.dirname(os.path.realpath(__file__))
@@ -22,7 +23,6 @@ def letsWriteIt(rows,o):
     csvfile = open(o, 'wb')
     outwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for row in rows:
-      print row
       outwriter.writerow(row)
     csvfile.close()
 
@@ -72,7 +72,8 @@ def letsDoIt(i,o):
     t1 = "%.2f" % float(total)
     t2 = "%.2f" % float(total+total)
 
-
+    if(len(rows) <= 0):
+       sys.exit("No bills > $0, nothing to do.\n")
 
     rows.insert(0,[cols[0],'','1',cols[2],'',d.strftime("%d-%b-%Y"),t2,'','','','','','','','','','','','','','','','','',''])
     rows.append([cols[0],'',cols[1],cols[2],'',d.strftime("%d-%b-%Y"),t1,'IT Infrastructure Server Backups',cols[6],cols[5],cols[6],cols[11],'','',cols[12],'','','','','','','','','',''])

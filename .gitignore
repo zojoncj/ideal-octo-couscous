@@ -21,4 +21,4 @@ dist
 *.pyc
 *.pyo
 *.tmp*
-*.swp
+*.sw*
